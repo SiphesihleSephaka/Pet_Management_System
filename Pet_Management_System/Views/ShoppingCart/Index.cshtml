@@ -1,0 +1,677 @@
+﻿@using System.Diagnostics.Eventing.Reader
+@using System.Globalization
+@using Pet_Management_System.Models
+@model Pet_Management_System.ViewModels.ShoppingCartViewModel
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    ViewBag.Title = "Checkout";
+    //CultureInfo us = new CultureInfo("en-SA");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+﻿
+<head>
+    <style>
+        .total {
+            padding: 20px;
+            background-color: #f2f2f2;
+            margin-top: 10px;
+        }
+
+        .total-group {
+            display: flex; /* Sets the container to flex layout */
+            justify-content: space-between; /* Distributes space between the items */
+            align-items: center; /* Aligns items vertically at the center */
+        }
+
+        .total1, .total2 {
+            flex: 1; /* Allows each child to grow equally */
+            text-align: right; /* Aligns the total label text to the left */
+        }
+
+        .total2 {
+            text-align: right; /* Aligns the total amount text to the right */
+        }
+
+
+        .checkout {
+            padding: 20px;
+            background-color: #ddd; /* Slightly darker background for contrast */
+            margin-top: 20px;
+            text-align: center; /* Centering the buttons and links */
+        }
+
+            .checkout .btn {
+                background-color: #5cb85c; /* Green background */
+                color: white; /* White text */
+                padding: 10px 20px;
+                border-radius: 5px; /* Rounded corners for buttons */
+                text-decoration: none; /* No underline */
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+                .checkout .btn:hover {
+                    background-color: #4cae4c; /* Darker green on hover */
+                }
+
+            .checkout .button a {
+                color: #337ab7; /* Bootstrap primary color */
+                text-decoration: none; /* No underline */
+                padding: 5px 10px;
+                border-radius: 5px; /* Rounded corners */
+                border: 1px solid #337ab7; /* Border color same as text */
+            }
+
+                .checkout .button a:hover {
+                    background-color: #286090; /* Darker blue background on hover */
+                    color: white; /* White text on hover */
+                }
+
+        .cartcontainer {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .main-bar, .items {
+            border-bottom: 1px solid #ccc;
+        }
+
+            .main-bar h3, .item1 .title1 p {
+                font-weight: bold;
+            }
+
+        .product, .price {
+            display: inline-block;
+            width: 40%; /* Adjusted width */
+        }
+
+        .item1 {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .image1 img {
+            width: 100px;
+            height: 90px;
+            border-radius: 5px;
+        }
+
+        .title1, .price1 {
+            flex: 1; /* Flexible space distribution */
+            padding: 0 20px; /* Padding on sides */
+        }
+
+        .price1 {
+            text-align: right; /* Right align price */
+        }
+
+        .btn-outline-dark {
+            border: none;
+            background-color: #444;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .btn-outline-dark:hover {
+                background-color: #333;
+            }
+
+    </style>
+    <style>
+        .price-and-remove {
+            display: flex;
+            align-items: center; /* Align items vertically */
+        }
+
+        .remove-button {
+            margin-left: 100px; /* Adjust spacing between price and remove button */
+        }
+    </style>
+    <style>
+        /* Modal Background */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 5px; /* Optional: rounded corners */
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        /* Modal Header */
+        .modal-header-left {
+            text-align: center;
+            padding: 5px 20px;
+        }
+
+        /* Styling for labels and inputs within modal */
+        .modal-body {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+            .modal-body .pill {
+                margin-bottom: 10px;
+            }
+
+        input[type="text"], select, .form-control {
+            width: 50%; /* Adjust width as needed */
+            padding: 8px;
+            margin: 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Makes the input fields look neater */
+        }
+
+        /* Footer and Buttons */
+        .modal-footer {
+            padding: 10px 20px;
+            text-align: center; /* Center align the buttons */
+        }
+
+        .btn-outline-dark {
+            background-color: #333;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px; /* Optional: rounded corners for buttons */
+        }
+
+            .btn-outline-dark:hover {
+                background-color: #555;
+            }
+
+    </style>
+
+</head>
+
+@{ double tot = ((double)Model.CartTotal);
+}
+
+<div id="myModal1" class="modal">
+    <div class="modal-content">
+        <div class="modal-header-left">
+            <span onclick="closeModal('myModal1')" class="close">&times;</span>
+            <h2 style="text-align:center">Review Order</h2>
+        </div>
+        <div class="modal-body">
+            <div class="pill" style="width: 100%; text-align: center">
+                <h4>Delivery Method</h4>
+                <strong>Collect</strong>
+            </div>
+            <div class="pill" style="width:100%; text-align:center">
+                <h4>Pickup Point</h4>
+                <strong>Durban Pickup Point</strong>
+                <p>16 Lancers Road</p>
+                <p>Berea, Durban, 4001</p>
+            </div>
+            <div class="pill" style="width: 100%; text-align: center">
+                <h4>Collect From</h4>
+                <strong id="collectDate"></strong>
+                <p>Standard Collect Free</p>
+            </div>
+            <div class="pill" style="width: 100%; text-align: center">
+                <h4>Payment Method</h4>
+                <strong>PayPal</strong>
+            </div>
+            <div class="modal-footer">
+                <div class="btn btn-outline-dark">
+                    <a href="@Url.Action(actionName: "CreatePayment", controllerName: "PayPal", routeValues: new { CartTotal = tot })">Proceed To Checkout</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="myModal2" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header-left">
+            <span class="close" onclick="closeModal('myModal2')">&times;</span>
+            <h2 style="text-align:center">Complete Adoption</h2>
+        </div>
+        @{ var clientInfo = db.CustInfos.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+        }
+        @if (clientInfo != null)
+        {
+            <form action="@Url.Action("UpdateCustInfo", "ShoppingCart")" method="post">
+                <div class="modal-body">
+
+
+                
+                        <strong id="DeliveryDate" style="display:none"></strong>
+                        
+                    <div class="pill" style="width: 100%; text-align: center;">
+                        <div style="display: flex; justify-content: center;">
+                            <strong> <label for="RecipientName" style="margin-right: 10px; font-size:20px; width:200px; color:black">Recipient Name:</label></strong>
+                            <input type="text" style="width: 50%; margin: 0 auto;" id="RecipientName" name="RecipientName" value="@clientInfo.RecipientName" class="form-control" placeholder="Please Enter Name of Recipient" required>
+                        </div>
+                    </div>
+                    <div class="pill" style="width: 100%; text-align: center;">
+                        <div style="display: flex; justify-content: center;">
+                            <strong> <label for="RecipientNumber" style="margin-right: 10px; font-size: 20px; width: 200px; color: black">Reciptient Number:</label></strong>
+                            <input type="text" style="width: 50%; margin: 0 auto;" id="RecipientNumber" name="RecipientNumber" value="@clientInfo.RecipientNumber" class="form-control" placeholder="Please Enter Recipient Phone Number" required>
+                        </div>
+                    </div>
+                    <div class="pill" style="width: 100%; text-align: center;">
+                        <div style="display: flex; justify-content: center;">
+                            <strong> <label for="Address" style="margin-right: 10px; font-size: 20px; width: 200px; color: black">Street Address:</label></strong>
+                            <input type="text" style="width: 50%; margin: 0 auto;" id="Address" name="Address" value="@clientInfo.Address" class="form-control" placeholder="Please Enter Street Address" required>
+                        </div>
+                    </div>
+                    <div class="pill" style="width: 100%; text-align: center;">
+                        <div style="display: flex; justify-content: center;">
+                            <strong> <label for="City" style="margin-right: 10px; font-size: 20px; width: 200px; color: black">City:</label></strong>
+                            <input type="text" style="width: 50%; margin: 0 auto;" id="City" name="City" value="@clientInfo.City" class="form-control" placeholder="Please Enter Name of City" required>
+                        </div>
+                    </div>
+
+
+                    <div class="pill" style="width: 100%; text-align: center;">
+                        <div style="display: flex; justify-content: center;">
+                            <strong> <label for="preffaredTime" style="margin-right: 10px; font-size: 20px; width: 200px; color: black">Preffered Time:</label></strong>
+                            <select id="preffaredTime" name="preffaredTime" class="form-control" style="width: 50%; margin: 0 auto;" required>
+                                <option value="">Please Select Preffared Time for Delivery</option>
+                                <option value="Early Morning (6am - 9am)">Early Morning (6am - 9am)</option>
+                                <option value="Late Morning (10am - 12pm)">Late Morning (10am - 12pm)</option>
+                                <option value="Early Afternoon (1pm - 3pm)">Early Afternoon (1pm - 3pm)</option>
+                                <option value="Late Afternoon (4pm - 6pm)">Late Afternoon (4pm - 6pm)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pill" style="width: 100%; text-align: center;">
+                        <div style="display: flex; justify-content: center;">
+                            <strong> <label for="Province" style="margin-right: 10px; font-size: 20px; width: 200px; color: black">Province:</label></strong>
+                            <select id="Province" name="Province" class="form-control" style="width: 50%; margin: 0 auto;" required>
+                                <option value="@clientInfo.Province">@clientInfo.Province</option>
+                                <option value="Estern Cape">Estern Cape</option>
+                                <option value="Free State">Free State</option>
+                                <option value="Kwazulu-Natal">Kwazulu-Natal</option>
+                                <option value="Limpopo">Limpopo</option>
+                                <option value="Mpumalanga">Mpumalanga</option>
+                                <option value="Northen Cape">Northen Cape</option>
+                                <option value="North West">North West</option>
+                                <option value="Western Cape">Western Cape</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="deliveryDate" name="deliveryDate" value="">
+                    <div class="pill" style="width: 100%; text-align: center;">
+                        <div style="display: flex; justify-content: center;">
+                            <strong><label for="City" style="margin-right: 10px; font-size: 15px; width: 200px; color: black">Basic Cost: R @tot</label></strong>
+                            <strong><label for="DeliveryCost" style="margin-right: 10px; font-size: 15px; width: fit-content; color: black">Delivery Cost:</label></strong> R
+                            <span id="DeliveryCost"></span>
+                            <strong><label for="TotalCost" style="margin-right: 10px; font-size: 15px; width: 100px; color:black ">Total Cost:</label></strong>R
+                            <span id="TotalCost"></span>
+
+                        </div>
+                    </div>
+                    <input type="hidden" id="basicCost" value="@tot" />
+                    <input type="hidden" id="totalCost" name="totalCost" value="" />
+                    <input type="hidden" id="ShippingMethod" name="ShippingMethod" value="Delivery" />
+                    <input type="hidden" id="deliveryFee" name="deliveryFee" value="" />
+                </div>
+
+                <div class="modal-footer">
+                    <div>
+                        <input type="submit" value="Procced To Checkout" class="btn btn-outline-dark" />
+                    </div>
+                </div>
+
+            </form>
+
+
+
+
+
+
+
+        }
+       
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<h3 style="padding-bottom:3px">
+    <span class="fa fa-shopping-cart">Your Selected Pets:</span>
+</h3>
+
+<div id="update-message" class="text-info">
+</div>
+@if (Model.CartItems.Count == 0)
+{
+    <a class="btn-danger" href="~/StoreFront/Index/1">Your shopping cart is empty, continue shopping---></a>
+}
+else
+{
+
+<div class="cartcontainer">
+    <!-- Mainbar-Starts-Here -->
+    <div class="main-bar">
+        <div class="product">
+            <h3>Pet</h3>
+        </div>
+        <div class="price" style="padding-left:300px;width:fit-content">
+            <h3>Adoption Cost</h3>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <!-- //Mainbar-Ends-Here -->
+
+    @foreach (var item in Model.CartItems)
+    {
+        <!-- Items-Starts-Here -->
+        <div class="items">
+            <!-- Item1-Starts-Here -->
+            <div class="item1">
+                <div class="image1">
+                    <img src="~/assets/images/@item.Product.picture" alt="item1" style="width:100px; height:90px">
+                </div>
+                <div class="title1">
+                    <p>@Html.ActionLink(item.Product.Name, "Details", "Products", new { id = item.ProductId }, null)</p>
+                </div>
+                <div class="price1" style="padding-left:0px">
+                    <p>R@((item.Product.Price * item.Count))</p>
+                </div>
+                <div class="remove-button">
+                    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action(actionName: "RemoveFromCart", controllerName: "ShoppingCart", routeValues: new { id = item.ProductId})'">
+                        <span class="fa fa-trash">Remove</span>
+                    </button>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <!-- //Item1-Ends-Here -->
+        </div>
+        <!-- //Items-Ends-Here -->
+    }
+    <!-- Total-Price-Starts-Here -->
+    <div class="total">
+        <div class="total1"  style="font-size:25px">Total Price</div>
+        <div class="total2" id="cart-total" style="font-size:25px">R @Model.CartTotal</div>
+        
+    </div>
+
+    <!-- //Total-Price-Ends-Here -->
+    <!-- Checkout-Starts-Here -->
+    <div class="checkout">
+        
+        <div class="btn btn-outline-dark">
+            <a onclick="openModal('myModal2')">Confirm Adoption</a>
+        </div>
+        <p class="button">
+            <a href="~/StoreFront/Index/1">Adopt more pets>></a>
+        </p>
+        <div class="clear"></div>
+    </div>
+
+</div>
+
+
+
+
+
+}
+
+<script>
+    function updateCartItemQuantity(productId, newQuantity) {
+        fetch('/ShoppingCart/UpdateCart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId: productId, newQuantity: newQuantity })
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('cart-total').text = data.cartTotal;
+                location.reload();
+            })
+            .catch(error => console.error('Error updating cart:', error));
+    }
+
+</script>
+<script>
+    // Function to open modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+    }
+
+    // Function to close modal
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
+    }
+
+    // Add event listeners for opening modals
+    document.querySelectorAll('button').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var modalId = this.getAttribute('data-modal-id');
+            openModal(modalId);
+        });
+    });
+
+    // Add event listeners for closing modals
+    document.querySelectorAll('.close').forEach(function (closeButton) {
+        closeButton.addEventListener('click', function () {
+            var modalId = this.getAttribute('data-modal-id');
+            closeModal(modalId);
+        });
+    });
+
+    // Add event listener for clicking outside modal to close it
+    window.addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            var modalId = event.target.getAttribute('id');
+            closeModal(modalId);
+        }
+    });
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqHXPxdgr3xi02C7qEDoYjSHpgBZ-WL0g&libraries=places"></script>
+
+
+<script>
+    $(document).ready(function () {
+        // Function to initialize Google Places Autocomplete
+        function initializeAutocomplete() {
+            var input = document.getElementById('Address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.setFields(['address_components', 'formatted_address']);
+            autocomplete.addListener('place_changed', function () {
+                var place = autocomplete.getPlace();
+                if (place.address_components) {
+                    var address = '';
+                    var cityAndPostalCode = '';
+                    // Iterate through address components to find city and postal code
+                    place.address_components.forEach(function (component) {
+                        if (component.types.includes('locality')) {
+                            // City
+                            cityAndPostalCode = component.long_name + ', ';
+                        } else if (component.types.includes('postal_code')) {
+                            // Postal code
+                            cityAndPostalCode += component.long_name;
+                        } else {
+                            // Other components
+                            address += component.long_name + ', ';
+                        }
+                    });
+                    // Construct the final address string
+                    address += cityAndPostalCode;
+                    // Set the value of the address input field
+                    input.value = address;
+
+                    // Calculate the delivery cost when the address changes
+                    calculateDistanceAndCost();
+                }
+            });
+        }
+
+        // Call initializeAutocomplete function when the document is ready
+        initializeAutocomplete();
+
+        // Calculate the delivery cost on document ready
+        calculateDistanceAndCost();
+
+        // Bind the calculateDistanceAndCost function to the change event of the address input field
+        $('#Address').on('input', calculateDistanceAndCost);
+
+        // Function to calculate the distance between two locations and the delivery cost
+        function calculateDistanceAndCost() {
+            var origin = "7 Ritson Rd, Musgrave, Berea, 4001"; // Origin address
+            var destination = $("#Address").val(); // Destination address
+            var service = new google.maps.DistanceMatrixService();
+            var deliveryCostElement = $("#DeliveryCost");
+
+            service.getDistanceMatrix({
+                origins: [origin],
+                destinations: [destination],
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC
+            }, function (response, status) {
+                if (status === google.maps.DistanceMatrixStatus.OK) {
+                    var distance = response.rows[0].elements[0].distance.text; // Distance in text format (e.g., "10 km")
+                    var distanceValue = parseFloat(distance.replace(" km", "").replace(",", "")); // Parse distance to a numeric value
+                    var deliveryCost = calculateDeliveryCost(distanceValue); // Call function to calculate delivery cost based on distance
+                    deliveryCostElement.text(deliveryCost.toFixed(2)); // Display delivery cost with two decimal places
+                } else {
+                    deliveryCostElement.text("Error calculating delivery cost"); // Display error message if distance calculation fails
+                }
+            });
+        }
+
+        // Function to calculate delivery cost based on distance
+        function calculateDeliveryCost(distance) {
+            // Add your delivery cost calculation logic here
+
+            return distance * 20;
+        }
+    });
+
+
+</script>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        // Function to calculate the total cost
+        function calculateTotalCost() {
+            var basicCost = parseFloat($("#basicCost").val()); // Get the basic cost from the hidden input
+            var deliveryCost = parseFloat($("#DeliveryCost").text()); // Get the delivery cost
+            var totalCost = basicCost + deliveryCost; // Calculate the total cost
+            $("#TotalCost").text(totalCost.toFixed(2)); // Display the total cost
+            $("#totalCost").val(totalCost.toFixed(2));
+            $("#deliveryFee").val(deliveryCost.toFixed(2)); // Set the value of the hidden input for total cost
+        }
+
+        // Call calculateTotalCost function whenever the delivery cost changes
+        $("#DeliveryCost").bind("DOMSubtreeModified", calculateTotalCost);
+
+        // Call calculateTotalCost function initially
+        calculateTotalCost();
+    });
+</script>
+<script>
+    // Function to get the next working day excluding weekends
+    function getWorkingDay(startDate, daysToAdd) {
+        var count = 0;
+        var result = new Date(startDate);
+        while (count < daysToAdd) {
+            result.setDate(result.getDate() + 1);
+            if (result.getDay() !== 0 && result.getDay() !== 6) { // Exclude Sunday (0) and Saturday (6)
+                count++;
+            }
+        }
+        return result.toDateString();
+    }
+
+    // Get the collect date and display it
+    var collectDateElement = document.getElementById('collectDate');
+    var today = new Date();
+    var collectDate = getWorkingDay(today, 3); // 3 working days from today
+    collectDateElement.textContent = collectDate;
+</script>
+<script>
+    // Function to get the next working day excluding weekends
+    function getWorkingDay(startDate, daysToAdd) {
+        var count = 0;
+        var result = new Date(startDate);
+        while (count < daysToAdd) {
+            result.setDate(result.getDate() + 1);
+            if (result.getDay() !== 0 && result.getDay() !== 6) { // Exclude Sunday (0) and Saturday (6)
+                count++;
+            }
+        }
+        return result.toDateString();
+    }
+
+    // Get the collect date and display it
+    var deliveryDateElement = document.getElementById('deliveryDate');
+    var DeliveryDateElement = document.getElementById('DeliveryDate');
+    var today = new Date();
+    var DeliveryDate = getWorkingDay(today, 3); // 3 working days from today
+    DeliveryDateElement.textContent = DeliveryDate;
+    deliveryDateElement.value = DeliveryDate;
+</script>

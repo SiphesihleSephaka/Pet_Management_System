@@ -1,0 +1,177 @@
+﻿@model IEnumerable<Pet_Management_System.Models.Driver>
+
+@{
+    ViewBag.Title = "Drivers";
+}
+
+<style>    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around; /* Distributes space evenly around the items */
+        margin-top: 50px; /* Adds vertical space from the top */
+    }
+
+    .card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        width: 300px; /* Fixed width for each card */
+        margin-bottom: 20px; /* Space between cards */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        padding: 15px;
+        display: flex;
+        flex-direction: column; /* Stack children vertically */
+    }
+
+    .image img {
+        width: 155px;
+        height: 150px;
+        border-radius: 5px; /* Rounded corners for images */
+    }
+
+    .ml-3 {
+        margin-left: 15px; /* Space from the image */
+        width: 100%;
+    }
+
+    .h4, .span {
+        color: #333;
+    }
+
+    .p-2 {
+        padding: 10px; /* Padding inside the stats area */
+    }
+
+    .bg-primary {
+        background-color: #007bff; /* Primary color background */
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-between; /* Space out stat items */
+        border-radius: 5px;
+    }
+
+        .stats .d-flex {
+            display: flex;
+            flex-direction: column; /* Stack stats vertically */
+        }
+
+    .articles, .followers, .rating {
+        font-size: 12px; /* Smaller font size for labels */
+        color: #fff; /* White text for better readability */
+    }
+
+    .number1, .number2, .number3 {
+        font-weight: bold; /* Bold for emphasis */
+        color: #fff; /* White text for numbers */
+    }
+
+    .button {
+        margin-top: 10px; /* Space above the button */
+    }
+
+    .btn-sm {
+        padding: 5px 10px; /* Smaller padding for small buttons */
+        border-radius: 5px; /* Rounded corners for buttons */
+        width: 100%; /* Full width of its container */
+    }
+
+    .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+    }
+
+    .btn:hover {
+        opacity: 0.85; /* Slight transparency on hover */
+    }
+</style>
+
+        <h2>Index</h2>
+
+        
+    <div class="container mt-5 d-flex">
+        @foreach (var item in Model)
+        {
+            <div class="card p-3">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="image" style="padding-right:5%">
+                        <img src="~/images/@item.Picture" class="rounded" width="155" height="150">
+                    </div>
+
+                    <div class="ml-3 w-100">
+
+                        <h4 class="mb-0 mt-0">@item.Name &nbsp; @item.Surname</h4>
+                        <span>@item.CarType &nbsp; Driver</span>
+
+                        <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+
+                            <div class="d-flex flex-column">
+
+                                <span class="articles">Vehicle Name</span>
+                                <span class="number1">@item.CarName</span>
+
+                            </div>
+
+                            <div class="d-flex flex-column">
+
+                                <span class="followers">Model</span>
+                                <span class="number2">@item.CarModel</span>
+
+                            </div>
+
+
+                            <div class="d-flex flex-column">
+
+                                <span class="rating">Registration</span>
+                                <span class="number3">@item.CarReg</span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="button mt-2 d-flex flex-row align-items-center">
+                            <div style="padding-right:4%">
+                                <button class="btn btn-sm btn-outline-primary w-100" onclick="location.href='@Url.Action(actionName: "MyProfile", controllerName: "Drivers", routeValues: new {email = item.Email })'">More Info</button>
+                            </div>
+                            @if (Session["ProductId"] != null)
+                            {
+                                <div>
+                                    <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='@Url.Action(actionName: "Create", controllerName: "DriverAssignments", routeValues: new {id = item.DrivId })'">Assign</button>
+                                </div>
+                            }
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        }
+        </div>
+
+
+      
+<script>
+    function Assign(id,name,surname) {
+
+
+        alertify.confirm('Assign Driver', 'Are you sure you want to Assign ' + name + ' ' + surname + ' to the delivery?', function () {
+        
+        window.location.href = '@Url.Action("Create", "DriverAssignments")/' + id;
+    }, null);
+}
+</script>

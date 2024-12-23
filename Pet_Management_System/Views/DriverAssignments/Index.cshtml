@@ -1,0 +1,391 @@
+﻿@model IEnumerable<IGrouping<Tuple<DateTime, TimeSpan>, Pet_Management_System.Models.OrderedProduct>>
+@using Pet_Management_System.Models
+@{ ApplicationDbContext db = new ApplicationDbContext();}
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    /* Modal Background */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        border-radius: 5px; /* Optional: rounded corners */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    /* Modal Header */
+    .modal-header-left {
+        text-align: center;
+        padding: 5px 20px;
+    }
+
+    /* Styling for labels and inputs within modal */
+    .modal-body {
+        text-align: center;
+        padding: 10px 0;
+    }
+
+        .modal-body .pill {
+            margin-bottom: 10px;
+        }
+
+    input[type="text"], select, .form-control {
+        width: 50%; /* Adjust width as needed */
+        padding: 8px;
+        margin: 10px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box; /* Makes the input fields look neater */
+    }
+
+    /* Footer and Buttons */
+    .modal-footer {
+        padding: 10px 20px;
+        text-align: center; /* Center align the buttons */
+    }
+
+    .btn-outline-dark {
+        background-color: #333;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px; /* Optional: rounded corners for buttons */
+    }
+
+        .btn-outline-dark:hover {
+            background-color: #555;
+        }
+
+    .container {
+        max-width: 1200px; /* Maximum width of the container */
+        margin: auto; /* Center the container */
+        padding: 20px;
+    }
+
+    .card {
+        background-color: #fff; /* White background for the cards */
+        border: 1px solid #ddd; /* Light grey border */
+        border-radius: 8px; /* Rounded corners */
+        margin-top: 20px; /* Space above each card */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    }
+
+    .card-body, .card-footer {
+        padding: 20px; /* Padding inside the card */
+    }
+
+    .card-title {
+        font-size: 24px; /* Larger font size for the card title */
+        color: #333; /* Dark grey color for text */
+        margin-bottom: 10px; /* Space below the title */
+    }
+
+    .card-subtitle {
+        font-size: 16px;
+        color: #666; /* Medium grey for subtitles */
+    }
+
+    .card-text {
+        font-size: 14px;
+        color: #555; /* Slightly darker text color for readability */
+    }
+
+    .card img {
+        border-radius: 50%; /* Circular images */
+        margin-right: 10px; /* Space to the right of the image */
+    }
+
+    /* Flex layout for items within card footer */
+    .card-footer {
+        display: flex;
+        justify-content: space-between; /* Distribute space evenly */
+        align-items: center; /* Vertically align items */
+        background-color: #f8f8f8; /* Slightly different background to distinguish footer */
+    }
+
+    .btn-outline-dark {
+        border: 1px solid #444; /* Dark border for buttons */
+        background-color: transparent; /* Transparent background */
+        color: #444; /* Dark text color matching the border */
+        padding: 10px 20px; /* Padding inside the button */
+        border-radius: 5px; /* Rounded corners for the button */
+        cursor: pointer; /* Pointer cursor on hover */
+    }
+
+        .btn-outline-dark:hover {
+            background-color: #ddd; /* Light grey background on hover */
+        }
+
+    /* Styles for labels and spans within the cards */
+    label {
+        font-weight: bold; /* Bold font for labels */
+    }
+
+    span {
+        color: orange; /* Orange color for emphasis */
+    }
+</style>
+
+
+
+
+
+<section class="w3l-index-about py-5" id="about2">
+    <div class="container py-md-5 py-2">
+        <h2>Index</h2>
+
+        @foreach (var group in Model)
+        {
+            var customerOrderIds = group.Select(g => g.CustomerOrderId).ToList();
+            var assignment = db.DriverAssignments.Where(x => customerOrderIds.Contains(x.CustomerOrderId)).ToList();
+
+            <div id="@group.FirstOrDefault().CustomerOrderId" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header-left">
+                        <span onclick="closeModal('@group.FirstOrDefault().CustomerOrderId')" class="close">&times;</span>
+                        <h2 style="text-align:center">Delivery Information</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="pill" style="width: 100%; text-align: center">
+                            <h4>Reciptient Names</h4>
+                            <strong>@group.FirstOrDefault().CustomerOrder.FirstName</strong>
+                        </div>
+                        <div class="pill" style="width:100%; text-align:center">
+                            <h4>Delivery Address</h4>
+                            <strong>@group.FirstOrDefault().CustomerOrder.Address</strong>
+
+                        </div>
+                        @try
+                        {
+                            <div class="pill" style="width: 100%; text-align: center">
+                                <h4>Delivery Date</h4>
+                                <strong id="collectDate">@assignment.FirstOrDefault().DeliveryDate </strong>
+
+                            </div>
+                        }
+                        catch
+                        {
+                        }
+                        @try
+                        {
+                            <div class="pill" style="width: 100%; text-align: center">
+                                <h4>Assignment Date</h4>
+                                <strong id="collectDate">@assignment.FirstOrDefault().Created </strong>
+                            </div>
+
+
+
+
+
+
+                        }
+                        catch
+                        {
+
+                        }
+                        @try
+                        {
+                            <div class="pill" style="width: 100%; text-align: center">
+                                <h4>Delivery Time</h4>
+                                <strong>@assignment.FirstOrDefault().DeliveryTime</strong>
+                            </div>
+                        }
+                        catch
+                        {
+
+                        }
+                        <div class="modal-footer">
+                            <div class="btn btn-outline-dark">
+                                <a onclick="closeModal('@group.FirstOrDefault().CustomerOrderId')">Close</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="container">
+                <div class="card mt-5 border-5 pt-2 active pb-0 px-3">
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-12 ">
+                                <h4 class="card-title "><b>Date: @group.Key.Item1.ToLongDateString()</b></h4>
+
+                            </div>
+                            @foreach (var item in group)
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">
+                                                    <p class="card-text text-muted small">
+                                                        <a href="#" onclick="showBiggerImage('@item.Product.picture')">
+                                                            <img src="~/assets/images/@item.Product.picture" class="mr-1" width="50" height="50" id="star">
+                                                            <span class="vl mr-2 ml-0"></span>
+                                                        </a>
+
+                                                        <label for="price">Pet Name:</label>
+                                                        <span id="priceValue" style="padding-left: 1%; color: blue; ">@item.Product.Name</span>
+
+
+
+                                                        <label for="price" style="padding-left: 10%; margin-left: -8px;">Cost:</label>
+                                                        @{ double tot = (double)item.Product.Price * item.Quantity;}
+                                                        <span id="priceValue" style="padding-left: 1%; color: blue;">R @tot</span>
+                                                    </p>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+
+
+
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white px-0">
+                        <div class="row">
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                <div style="padding-right:2%;width:fit-content">
+                                    <label for="shippingMethod" style="width:fit-content">Pet Type:</label>
+                                    <span id="shippingMethodValue" style="padding-left: 5px; color: blue;">@group.FirstOrDefault().Product.Category.Name</span>
+                                </div>
+                                <div style="padding-right:2%;width:fit-content">
+                                    <label for="deliveryFee">Delivery fee:</label>
+                                    <span id="deliveryFeeValue" style="padding-left: 5px; color: blue;"> @group.FirstOrDefault().CustomerOrder.deliveryFee.ToString("R0.00")</span>
+                                </div>
+                                <div style="padding-right:2%;width:fit-content">
+                                    <label for="basicCost" style="width:fit-content">Basic Cost:</label>
+                                    <span id="basicCostValue" style="padding-left: 5px; color: blue;"> @group.FirstOrDefault().CustomerOrder.Amount.ToString("R0.00")</span>
+                                </div>
+                                <div style="padding-right:2%;width:fit-content">
+                                    <label for="totalCost">Total Cost:</label>
+                                    @{ double fTot = (double)group.FirstOrDefault().CustomerOrder.Amount + @group.FirstOrDefault().CustomerOrder.deliveryFee;}
+                                    <span id="totalCostValue" style="padding-left: 5px; color: blue;"> @fTot.ToString("R0.00")</span>
+                                </div>
+                                @if (@group.FirstOrDefault().CustomerOrder.Status == "Delivery Scheduled")
+                                {
+                                    <button class="btn btn-outline-dark" style="margin-left: 20px;" onclick="location.href='@Url.Action("OrderReady", "DriverAssignments", new {id= assignment.FirstOrDefault().AssDrivId})'">Order Ready</button>
+
+                                }
+                                <button class="btn btn-outline-dark" style="margin-left: 5px;" onclick="openModal('@group.FirstOrDefault().CustomerOrderId')">Delivery Info</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+
+        }
+
+
+
+    </div>
+</section>
+
+
+<script>
+    function Ready(id) {
+
+
+        alertify.confirm('Order Ready', 'Are you sure this order is ready for delivery? ' , function () {
+
+        window.location.href = '@Url.Action("OrderReady", "DriverAssignments")/' + id;
+    }, null);
+}
+</script>
+<script>
+    // Function to open modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+    }
+
+    // Function to close modal
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
+    }
+
+    // Add event listeners for opening modals
+    document.querySelectorAll('button').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var modalId = this.getAttribute('data-modal-id');
+            openModal(modalId);
+        });
+    });
+
+    // Add event listeners for closing modals
+    document.querySelectorAll('.close').forEach(function (closeButton) {
+        closeButton.addEventListener('click', function () {
+            var modalId = this.getAttribute('data-modal-id');
+            closeModal(modalId);
+        });
+    });
+
+    // Add event listener for clicking outside modal to close it
+    window.addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            var modalId = event.target.getAttribute('id');
+            closeModal(modalId);
+        }
+    });
+
+
+</script>

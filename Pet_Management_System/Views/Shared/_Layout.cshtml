@@ -1,0 +1,301 @@
+﻿
+@using Pet_Management_System.Models
+
+
+@{
+    ApplicationDbContext db = new ApplicationDbContext(); }
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Management System </title>
+    <style>
+        input[type="submit"] {
+            border-radius: 15px; /* Rounded edges */
+            padding: 10px 20px; /* Padding for better spacing */
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            border: none; /* Remove default border */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+
+            input[type="submit"]:hover {
+                background-color: #45a049; /* Darker green background on hover */
+            }
+
+        .dropdown-menu {
+            display: none; /* Initially hide the dropdown */
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 140px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block; /* Show the dropdown on hover */
+        }
+
+        .dropdown-menu a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+            .dropdown-menu a:hover {
+                background-color: #f1f1f1;
+            }
+    </style>
+    <link href="~/assets/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <!-- Default theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+    <!-- Custom Theme files -->
+    <link href="~/assets/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- Custom Theme files -->
+    <!-- navigation -->
+    <link href="~/assets/css/component.css" rel="stylesheet" type="text/css" />
+
+    <!-- navigation -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="My Pets Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!--webfont-->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <script src="~/assets/js/responsiveslides.min.js"></script>
+    <script>
+        $(function () {
+            $("#slider").responsiveSlides({
+                auto: true,
+                speed: 500,
+                namespace: "callbacks",
+                pager: true,
+            });
+        });
+    </script>
+    <script type="text/javascript" src="~/assets/js/move-top.js"></script>
+    <script type="text/javascript" src="~/assets/js/easing.js"></script>
+</head>
+
+<body>
+    <!-- header-section-starts -->
+    <div class="header">
+        <div class="header-top">
+            <div class="container">
+                <p class="location"><i class="location"></i>112, Steve Biko road, Durban 4200</p>
+                <p class="phonenum">+27 727 887 992</p>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html"><img src="~/assets/images/logo.png" alt="" /></a>
+                </div>
+                <span class="menu"></span>
+                <div class="top-menu">
+                    <ul>
+                        <nav class="cl-effect-5">
+                            @if (!Request.IsAuthenticated)
+                            {
+                            <li style="padding-right:600px"><a class="active" href="@Url.Action("Index", "Home")"><span data-hover="Home">Home</span></a></li>
+
+                        }
+                        else
+                        {
+                            <li><a class="active" href="@Url.Action("Index", "Home")"><span data-hover="Home">Home</span></a></li>
+                        }
+                            @if (Request.IsAuthenticated)
+                            {
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Pet Shop <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="@Url.Action("Index", "Categories")">Categories</a></li>
+                                            <li><a href="@Url.Action("Index", "Products")">Pets</a></li>
+                                            <li><a href="@Url.Action("Index", "OrderedProducts")">Ordered Pets</a></li>
+                                            <li><a href="@Url.Action("Index", "DriverAssignments")">Driver Assignments</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown" style="padding-right:100px">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Manage Users  <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+
+                                            <li><a href="@Url.Action("Create", "Users")">Add Users</a></li>
+                                            <li><a href="@Url.Action("Index", "Drivers")">Drivers</a></li>
+
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello @User.Identity.Name <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+                                                }
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+
+
+
+                                }
+                                else if (User.IsInRole("Driver"))
+                                {
+                                    bool IsProfile = db.Drivers.Where(x => x.Email == User.Identity.Name).Any();
+                                    if (IsProfile)
+                                    {
+                                        <li><a class="active" href="@Url.Action("MyProfile", "Drivers")"><span data-hover="Profile">Profile</span></a></li>
+
+                                    }
+                                    else
+                                    {
+                                        <li><a class="active" href="@Url.Action("Create","Drivers")"><span data-hover="Create">Create Profile</span></a></li>
+
+                                    }
+                                    <li><a class="active" href="@Url.Action("MyAssignments", "DriverAssignments")"><span data-hover="Deliveries">Deliveries</span></a></li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello @User.Identity.Name <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li style="padding-right:100px">
+                                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+                                                }
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+
+                                }
+                                else
+                                {
+                                    <li class="dropdown" style="padding-right:100px">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Adopt Pet <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="@Url.Action("Index","StoreFront")">Broucher</a></li>
+                                            <li><a href="@Url.Action("MyOrders","OrderedProducts")">Adoptions</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello @User.Identity.Name <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+                                                }
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+                                }
+                            }
+
+                            else
+                            {
+                                <li><a class="active" href="@Url.Action("Login", "Account")"><span data-hover="Login">Login</span></a></li>
+                                <li><a class="active" href="@Url.Action("Register", "Account")"><span data-hover="Register">Register</span></a></li>
+
+                            }
+                            </nav>
+                        </ul>
+                    </div>
+                    <!-- script for menu -->
+                    <script>
+                        $("span.menu").click(function () {
+                            $(".top-menu").slideToggle("slow", function () {
+                                // Animation complete.
+                            });
+                        });
+                    </script>
+                    <!-- script for menu -->
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        @if (ViewBag.Title != "Home Page")
+        {
+            <div class="content">
+                <!--about-->
+                <div class="main">
+                    <div class="container">
+                        <div class="about-top">
+                            <div class="about-top-info">
+                                <h3>@ViewBag.Title</h3>
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @RenderBody()
+        }
+
+
+
+
+        <!-- footer-section-starts -->
+        <div class="footer">
+            <div class="container">
+
+                <div class="col-md-7 follow-us">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <i class="facebook"></i>
+                        <i class="twitter"></i>
+                        <i class="pinterest"></i>
+                        <i class="googlepluse"></i>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor</p>
+                    <div class="copyright">
+                        <p>c @DateTime.Now.Year Pet Management System</a></p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!-- footer-section-ends -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                /*
+                var defaults = {
+                        containerID: 'toTop', // fading element id
+                    containerHoverID: 'toTopHover', // fading element hover id
+                    scrollSpeed: 1200,
+                    easingType: 'linear'
+                    };
+                */
+
+                $().UItoTop({ easingType: 'easeOutQuart' });
+
+            });
+        </script>
+        @RenderSection("scripts", required: false)
+        <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+    </body>
+</html>

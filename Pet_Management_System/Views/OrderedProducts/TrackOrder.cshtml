@@ -1,0 +1,134 @@
+﻿@model Pet_Management_System.Models.OrderedProduct
+@using Pet_Management_System.Models
+
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    ViewBag.Title = "Track Adoption";
+}
+<head>
+    <link href="~/Content/Track.css" rel="stylesheet" />
+
+</head>
+
+
+        <h2>Track Adoption</h2>
+        @{ var Assign = db.DriverAssignments.Where(x => x.CustomerOrderId == Model.CustomerOrderId).FirstOrDefault();}
+        <div class="container">
+            <article class="card">
+                <header class="card-header"> My Orders / Tracking </header>
+                <div class="card-body">
+                    <h6>Order ID: @Model.CustomerOrderId</h6>
+                    @if (Model.CustomerOrder.ShippingMethod == "Delivery")
+                    {
+                        <article class="card">
+                            <div class="card-body row">
+                                <div class="col"> <strong>Estimated Delivery time:</strong> <br>@Model.CustomerOrder.deliveryDate.ToLongDateString()  </div>
+
+
+                                @if (Assign != null)
+                                {
+                                    <div class="col">
+                                        <strong>Shipping BY:</strong>
+
+                                        <br> @Assign.Surname, | <i class="fa fa-phone"></i> @Assign.Driver.PhoneNumber
+                                    </div>
+                                }
+
+
+
+                                <div class="col"> <strong>Status:</strong> <br> @Model.CustomerOrder.Status </div>
+                                <div class="col"> <strong>Unique Code #:</strong> <br> @Model.CustomerOrder.UniqueCode </div>
+                            </div>
+                        </article>
+                    }
+                    else
+                    {
+                        <article class="card">
+                            <div class="card-body row">
+                                <div class="col"> <strong>Pickup time:</strong> <br>@Model.CustomerOrder.deliveryDate.ToLongDateString()  </div>
+
+                                <div class="col">
+                                    <strong>Pickup Location:</strong>
+
+                                    <br> @Assign.Surname, | <i class="fa fa-location-arrow"></i> @Assign.Email
+                                </div>
+
+                                <div class="col"> <strong>Status:</strong> <br> @Model.CustomerOrder.Status </div>
+                                <div class="col"> <strong>Unique Code #:</strong> <br> @Model.CustomerOrder.UniqueCode </div>
+                            </div>
+                        </article>
+                    }
+                    <div class="track">
+                        @if (Model.CustomerOrder.ShippingMethod == "Delivery")
+                        {
+
+
+                            if (Model.CustomerOrder.Status == "Placed" || Model.CustomerOrder.Status == "Delivery Scheduled")
+                            {
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Pet Recived</span> </div>
+
+                            }
+                            else if (Model.CustomerOrder.Status == "Ready for pickup" || Model.CustomerOrder.Status == "No Response")
+                            {
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Pet Recived</span> </div>
+                            }
+
+
+                            else if (Model.CustomerOrder.Status == "On the way")
+                            {
+                                <div class="step active">
+                                    <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span>
+                                </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Pet Recived</span> </div>
+                            }
+                            else if (Model.CustomerOrder.Status == "Order Recived")
+                            {
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by driver</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Pet Recived</span> </div>
+                            }
+
+
+                        }
+
+                        else
+                        {
+                            if (Model.CustomerOrder.Status == "Placed")
+                            {
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Ready for pickup</span> </div>
+
+                                <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order Recived</span> </div>
+
+                            }
+                        }
+                    </div>
+                    <hr>
+
+                    
+                    <hr>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href="@Url.Action("Index","OrderedProducts")" class="btn btn-warning" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to orders</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("MyOrders","OrderedProducts")" class="btn btn-warning" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to Adoptions</a>}
+
+                </div>
+            </article>
+        </div>
+    

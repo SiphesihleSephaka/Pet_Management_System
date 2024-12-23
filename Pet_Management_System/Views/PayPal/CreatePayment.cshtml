@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "CreatePayment";
+}
+
+
+<h2>Create Payment</h2>
+
+@using (Html.BeginForm("CreatePayment", "PayPal", FormMethod.Post))
+{
+    <button type="submit" class="btn btn-primary">Pay with PayPal</button>
+}
+

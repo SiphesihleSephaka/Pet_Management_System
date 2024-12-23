@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="slider">
+    <div class="callbacks_container">
+        <ul class="rslides" id="slider">
+            <li>
+                <img src="~/assets/images/3.jpg" alt="" />
+                <div class="caption">
+                    <h2>Until one has loved an animal a part of one's soul remains unawakened.</h2>
+                    @if (!Request.IsAuthenticated)
+                    {
+                        <a class="more" href="@Url.Action("Login","Account")">Login</a>
+                    }
+                    else
+                    {
+
+                    }
+                </div>
+            </li>
+            <li>
+                <img src="~/assets/images/2.jpg" alt="" />
+                <div class="caption">
+                    <h2>A dog is the only thing on earth that loves you more than you love yourself.</h2>
+                    @if (!Request.IsAuthenticated)
+                    {
+                        <a class="more" href="@Url.Action("Login","Account")">Login</a>
+                    }
+                    else
+                    {
+
+                    }
+
+                </div>
+            </li>
+            <li>
+                <img src="~/assets/images/1.jpg" alt="" />
+                <div class="caption">
+                    <h2>Money can buy you a fine dog, but only love can make him wag his tail.</h2>
+                    @if (!Request.IsAuthenticated)
+                    {
+                        <a class="more" href="@Url.Action("Login","Account")">Login</a>
+                    }
+                    else
+                    {
+
+                    }
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+

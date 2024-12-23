@@ -1,0 +1,16 @@
+﻿﻿@model int
+
+@{
+    ViewBag.Title = "Complete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="w3l-index-about py-5" id="about2">
+    <div class="container py-md-5 py-2">
+        <h2>Checkout Complete</h2>
+        <p>Thanks for your order! Your order id is: @Model</p>
+        <p>
+            How about shopping for some more music in our
+            @Html.ActionLink("store", "Index", "Home")
+        </p>
+        </div>
+</section>

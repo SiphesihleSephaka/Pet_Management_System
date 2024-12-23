@@ -1,0 +1,111 @@
+﻿@model Pet_Management_System.Models.DriverAssignment
+
+
+<section class="w3l-index-about py-5" id="about2">
+    <div class="container py-md-5 py-2">
+        <h2>Create</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4>DriverAssignment</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.CustomerOrderId, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CustomerOrderId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.ProductId, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ProductId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.DrivId, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DrivId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @style = "width:40%", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>@if (ViewBag.Title != "Schedule Return")
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.GenDeliveryDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.GenDeliveryDate, new { htmlAttributes = new { @class = "form-control", @style = "width:40%", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.GenDeliveryDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.preffaredTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.preffaredTime, new { htmlAttributes = new { @class = "form-control", @style = "width:40%", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.preffaredTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-group">
+                    @if (ViewBag.Title != "Schedule Return")
+                    {
+                        @Html.LabelFor(model => model.DeliveryDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    }
+                    else
+                    {
+                        <label>Return Date</label>
+                    }
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DeliveryDate, new { htmlAttributes = new { @class = "form -control", @style = "width:40%" } })
+                        @Html.ValidationMessageFor(model => model.DeliveryDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @if (ViewBag.Title != "Schedule Return")
+                    {
+                        @Html.LabelFor(model => model.DeliveryTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                    }
+                    else
+                    {
+                        <label>Return Time</label>
+                    }
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DeliveryTime, new { htmlAttributes = new { @class = "form-control", @style = "width:40%" } })
+                        @Html.ValidationMessageFor(model => model.DeliveryTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+</section>

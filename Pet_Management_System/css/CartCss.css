@@ -1,0 +1,209 @@
+﻿/*--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+
+
+
+/*-- Reset Code --*/
+
+
+
+
+
+/* horizontal menu */
+img {
+    max-width: 100%;
+}
+/*-- Reset Code --*/
+
+/*-- Index-Page-Styling --*/
+
+
+
+
+.cartcontainer {
+    width: 55%;
+    margin: 0 auto;
+}
+
+
+
+.main-bar {
+    padding: 20px 10px;
+    background-color: #000;
+    margin-bottom: 30px;
+    border-radius: 5px;
+}
+
+.product {
+    width: 65%;
+    float: left;
+}
+
+    .product h3 {
+        padding-left: 20px;
+    }
+
+.quantity {
+    width: 15%;
+    float: left;
+    text-align: center;
+}
+
+.price {
+    width: 20%;
+    float: left;
+    text-align: center;
+}
+
+.main-bar h3 {
+    color: #FFF;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.items {
+    padding: 20px 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+.item1, .item2, .item3 {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.item3 {
+    margin-bottom: 0;
+}
+
+
+
+.image1, .image2, .image3 {
+    width: 20%;
+    float: left;
+}
+
+img {
+    padding-left: 20px;
+}
+
+.title1, .title2, .title3 {
+    width: 45%;
+    float: left;
+}
+
+.quantity1, .quantity2, .quantity3 {
+    width: 15%;
+    float: left;
+    text-align: center;
+}
+
+.price1, .price2, .price3 {
+    width: 20%;
+    float: left;
+    text-align: center;
+}
+
+
+
+.quantity1 input[type="number"], .quantity2 input[type="number"], .quantity3 input[type="number"] {
+    width: 70%;
+    margin-top: 10px;
+    padding: 7px 5px;
+    text-align: center;
+    margin-left: 10px;
+    font-size: 16px;
+    outline: none;
+    border: 2px solid #b6c0c9;
+    border-radius: 5px;
+    color: #b6c0c9;
+}
+
+.total {
+    padding: 0 60px;
+    margin: 20px 0;
+}
+
+.total1, .total2 {
+    width: 50%;
+    float: left;
+    font-size: 23px;
+    font-weight: bold;
+    color: #47484A;
+}
+
+.total2 {
+    text-align: right;
+}
+
+.checkout {
+    background-color: #FFF;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: right;
+}
+
+.discount {
+    width: 50%;
+    float: left;
+}
+
+    .discount span {
+        color: #898989;
+        font-weight: bold;
+    }
+
+    .discount input[type="text"] {
+        padding: 7px 5px;
+        width: 25%;
+        text-align: center;
+        margin-left: 20px;
+        font-size: 16px;
+        outline: none;
+        border: 2px solid #b6c0c9;
+        border-radius: 5px;
+        color: #b6c0c9;
+    }
+
+.add {
+    width: 20%;
+    float: left;
+    padding-top: 7px;
+}
+
+    .add a {
+        color: #70658a;
+        font-weight: bold;
+    }
+
+        .add a:hover {
+            color: #33C39B;
+        }
+
+.checkout-btn {
+    width: 30%;
+    float: left;
+    padding-top: 7px;
+}
+
+    .checkout-btn a {
+        padding: 7px 30px;
+        color: #FFF;
+        font-weight: bold;
+        background-color: #70658a;
+        border-radius: 5px;
+    }
+
+        .checkout-btn a:hover {
+            background-color: #33C39B;
+        }
+
+
+
+/*--- Responsive Code ---*/
+
+

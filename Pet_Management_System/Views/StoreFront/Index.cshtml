@@ -1,0 +1,155 @@
+﻿@model Pet_Management_System.Models.Category
+@using Pet_Management_System.Models;
+@{
+    
+    ApplicationDbContext db = new ApplicationDbContext();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = @Model.Name;
+}
+<head>
+<script type="application/x-javascript">
+    addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+           function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //for-mobile-apps -->
+
+<link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.css">
+<!-- font-awesome icons -->
+<link href="~/css/font-awesome.css" rel="stylesheet">
+<!-- //font-awesome icons -->
+<!-- js -->
+<script src="~/js/jquery-1.11.1.min.js"></script>
+<!-- //js -->
+<link href='//fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<!-- start-smoth-scrolling -->
+<script type="text/javascript" src="~/js/move-top.js"></script>
+<script type="text/javascript" src="~/js/easing.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+        });
+    });
+</script>
+<!-- start-smoth-scrolling -->
+</head>
+
+<section class="banner-bottom py-5">
+    <div class="container py-md-3">
+        <h2>@Model.Name</h2>
+        <br />
+        <br />
+
+        <div class="row">
+            <!-- Category section -->
+            <div class="col-xs-12 col-md-3">
+                <div class="categories">
+                    <h2>Available Pets</h2>
+                    @{ var categories = db.Categories.ToList();}
+                    
+                <ul class="cate">
+                    @foreach (var item in categories)
+                    {
+                        <li><a href="~/StoreFront/Index/@item.Id"><i class="fa fa-arrow-right" aria-hidden="true"></i>@item.Name</a></li>
+                    }
+
+
+                   
+                </ul>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-9">
+                <div class="products" style="padding-top:0px">
+                    @*<div class="row">
+            <div class="col-md-8 products-right">
+                <div class="sorting">
+                    <select id="country" onchange="change_country(this.value)" class="frm-field required sect">
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>Default sorting</option>
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>Sort by popularity</option>
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>Sort by average rating</option>
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>Sort by price</option>
+                    </select>
+                </div>
+                <div class="sorting-left">
+                    <select id="country1" onchange="change_country(this.value)" class="frm-field required sect">
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>Item on page 9</option>
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>Item on page 18</option>
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>Item on page 32</option>
+                        <option value="null"><i class="fa fa-arrow-right" aria-hidden="true"></i>All</option>
+                    </select>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>*@
+                    <div class="agile_top_brands_grids">
+                        <div class="row">
+                            @foreach (var product in Model.Products)
+                            {
+                                <div class="col-md-4 top_brand_left">
+                                    <div class="hover14 column">
+                                        <div class="agile_top_brand_left_grid">
+                                            <div class="agile_top_brand_left_grid1">
+                                                <figure>
+                                                    <div class="snipcart-item block">
+                                                        <div class="snipcart-thumb">
+                                                            <a href="@Url.Action("Single", "StoreFront", new {id = product.Id})"><img style="height: 150px; width: 200px" title=" " alt=" " src="~/assets/images/@product.picture"></a>
+                                                            <p>@product.Name</p>
+                                                            <h4>R @product.Price</h4>
+                                                        </div>
+                                                        <div class="snipcart-details top_brand_home_details">
+                                                            @Html.ActionLink("Adopt Pet", "AddToCart", "ShoppingCart", new { id = product.Id }, new { @class = "btn btn-dark" })
+                                                        </div>
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</div>
+            
+       
+    
+    
+
+</section>
+
+
+
+
+
+@*@foreach (var product in Model.Products)
+                                    {
+                                        <div class="col-xs-12 col-md-3" style="padding-bottom: 35px">
+                                            <div class="thumbnail" style="border: 3px solid #000000; width:206px; height:260px; ">
+                                                <img style="height: 150px;  width: 200px" class="img-responsive" src="~/assets/images/@product.picture">
+                                                <div class="caption text-center">
+                                                    <p style="text-align:center">
+                                                        <b>Name:</b> <span>@product.Name</span>
+                                                    </p>
+                                                    <p style="text-align:center">
+                                                        <b>Price:</b> <span>R @product.Price</span>
+                                                    </p>
+                                                    <div class="product-buttons">
+                                                        <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="btn btn-primary btn-details">Details</a>
+                                                        @Html.ActionLink("Add to cart", "AddToCart", "ShoppingCart", new { id = product.Id }, new { @class = "btn btn-info btn-cart" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </section>*@

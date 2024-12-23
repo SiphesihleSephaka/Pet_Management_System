@@ -1,0 +1,32 @@
+﻿﻿@model IEnumerable<Pet_Management_System.Models.Category>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Shop";
+}
+
+<section class="w3l-index-about py-5" id="about2">
+    <div class="container py-md-5 py-2">
+        <div class="container">
+            <h4>Click on a Category below to get started</h4>
+
+            <br />
+
+            <div class="row">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3">
+                        <div class="categorywrap">
+                            <a href="~/StoreFront/Index/@item.Id">
+                                <h5 style="color:black">@item.Name</h5>
+                                <img style="height: 200px; border: 1px solid #ccc; margin-bottom: 20px; width: 150px " src="~/assets/images/@item.Icon" alt="" />
+                            </a>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+</section>

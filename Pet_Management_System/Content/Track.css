@@ -1,0 +1,115 @@
+﻿/* General Layout */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Card Styling */
+.card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 20px;
+    overflow: hidden; /* Ensures no overflow */
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 15px;
+    font-size: 18px;
+    border-bottom: 1px solid #ccc;
+}
+
+.card-body {
+    padding: 15px;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Order Detail Columns */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col {
+    padding: 0 15px;
+    flex: 50%; /* Adjusts to take half of the container width */
+    box-sizing: border-box;
+}
+
+/* Tracking Steps */
+.track {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f8f8;
+}
+
+.step {
+    text-align: center;
+    width: 20%;
+    position: relative;
+}
+
+    .step .icon {
+        background: #ddd;
+        color: #fff;
+        line-height: 40px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .step.active .icon {
+        background: #007bff;
+        color: #ffffff;
+    }
+
+    .step .text {
+        margin-top: 7px;
+        display: block;
+        font-size: 14px;
+    }
+
+    /* Enhancing visibility of current step */
+    .step.active .text {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+/* Button Styling */
+.btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+/* Icons */
+.fa {
+    margin-right: 5px;
+}
+
+/* QR Code and back button */
+.img-sm {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}

@@ -1,0 +1,22 @@
+﻿.agileinfo_single_left,
+.agileinfo_single_right {
+    float: left;
+    width: 30%; /* Adjust the width as needed */
+    box-sizing: border-box;
+}
+
+.agileinfo_single_left {
+    padding-right: 15px; /* Add padding to the right for separation */
+}
+
+.agileinfo_single_right {
+    padding-left: 15px; /* Add padding to the left for separation */
+}
+
+@media screen and (max-width: 768px) {
+    .agileinfo_single_left,
+    .agileinfo_single_right {
+        width: 100%; /* Make both sections take full width on smaller screens */
+        padding: 0; /* Remove padding on smaller screens */
+    }
+}

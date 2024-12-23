@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "Finish Pet Delivery";
+}
+
+<style>
+    /* General Page Styles */
+    h2 {
+        color: #333;
+        font-size: 24px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Countdown Style */
+    #countdown {
+        font-size: 20px;
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Form Styling */
+    form {
+        text-align: center;
+        margin: 20px;
+    }
+
+    /* Input Field Styling */
+    input[type="text"] {
+        width: 50%;
+        padding: 8px;
+        margin: 10px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /* Button Styling */
+    button {
+        background-color: #007bff; /* Blue background */
+        color: white; /* White text */
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+    /* Specific style for hidden 'No Response' button */
+    #submitButton {
+        display: none; /* Hidden by default */
+    }
+
+    /* Manual code input area styling */
+    #manual-code-input {
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+</style>
+
+
+       
+        <h2>Finish Pet Delivery</h2>
+        <div id="countdown"></div>
+        <form id="noResponseForm" action="@Url.Action("NoResponseAction", "DriverAssignments")" method="post">
+            
+            <button type="submit" id="submitButton" style="display: none;">Submit No Response</button>
+        </form>
+        
+
+        <div id="manual-code-input">
+            <form id="code-form" method="post" action="@Url.Action("FinishOrderDelivery", "DriverAssignments")">
+                <label for="code-input">Enter code :</label>
+                <input type="text" id="code-input" name="code">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+   
+
+
+<script>
+    // Function to update countdown timer
+    function updateCountdown() {
+        var countdownElement = document.getElementById('countdown');
+        var minutes = Math.floor(timeLeft / 60);
+        var seconds = timeLeft % 60;
+
+        // Display remaining time in minutes and seconds
+        countdownElement.innerHTML = 'Time Left: ' + minutes + 'm ' + seconds + 's';
+
+        // Decrease time left by 1 second
+        timeLeft--;
+
+        // If time left is less than 0, submit the form
+        if (timeLeft < 0) {
+            clearInterval(timer);
+            // Show the submit button before submitting the form
+            document.getElementById('submitButton').style.display = 'block';
+            document.getElementById('noResponseForm').submit();
+        }
+    }
+
+    // Set the countdown duration in seconds (1 minute = 60 seconds)
+    var duration = 800;
+
+    // Calculate time left (in seconds)
+    var timeLeft = duration;
+
+    // Update countdown every second
+    var timer = setInterval(updateCountdown, 1000);
+</script>
+
+
+<script>
+    // Function to handle manual code submission
+    function submitManualCode() {
+        var manualCode = document.getElementById('code-input').value;
+        if (manualCode.trim() !== '') {
+            // Call a function to handle the manual code submission
+            document.getElementById('code-form').submit();
+        } else {
+            alert('Please enter a code.');
+        }
+    }
+
+    // Function to send the scanned QR code or typed code to the server
+    function sendCodeToServer(code) {
+        // Use the scanned QR code if available, otherwise use the manually entered code
+        var codeToSend = code || document.getElementById('code-input').value;
+
+        // Set the value of the hidden input field
+        document.getElementById('code-input').value = codeToSend;
+
+        // Submit the form
+        document.getElementById('code-form').submit();
+    }
+
+    // Get access to the camera
+   
+</script>
+
